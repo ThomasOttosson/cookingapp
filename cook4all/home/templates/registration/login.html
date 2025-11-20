@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <!-- Card to make the form pop -->
+            <div class="card shadow-lg">
+                <div class="card-body p-4">
+                    <h2 class="card-title text-center mb-4">Sign In <i class="fa-solid fa-right-to-bracket"></i></h2>
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <!-- Loop through form fields to style each -->
+                        {% for field in form %}
+                        <div class="mb-3">
+                            {{ field.label_tag }}
+                            {{ field|add_class:"form-control" }}
+                            {% if field.errors %}
+                            <div class="text-danger small">
+                                {{ field.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-danger btn-block">Sign In</button>
+                        </div>
+                    </form>
+
+                    <!-- Divider -->
+                    <div class="text-center my-3">
+                        <span class="text-muted">OR</span>
+                    </div>
+
+                    <!-- Google Sign-In Button -->
+                    {% load socialaccount %}
+
+                    <div class="d-grid mb-3">
+                        <a href="{% provider_login_url 'google' %}" class="btn btn-outline-danger">
+                            <i class="fa-brands fa-google"></i> Sign in with Google
+                        </a>
+                    </div>
+
+                    <p class="text-center mt-3">
+                        Don't have an account? <a href="{% url 'register' %}">Create Account</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
