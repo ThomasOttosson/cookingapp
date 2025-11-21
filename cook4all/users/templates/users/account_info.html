@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'users/profile.css' %}">
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0 rounded-4 p-4">
+
+                <!-- Header -->
+                <div class="text-center mb-4">
+                    <h1 class="fw-bold caveat">My Profile</h1>
+                    <p class="text-muted">Manage your account information</p>
+                </div>
+
+                <!-- Profile Info -->
+                <div class="row mb-3">
+                    <div class="col-md-4 text-center">
+                        <!-- Placeholder for profile picture -->
+                        <img src="{% static 'users/default_profile.png' %}" 
+                             class="rounded-circle img-fluid profile-pic mb-2" 
+                             alt="{{ user.username }}">
+                        <p class="fw-semibold">{{ user.username }}</p>
+                    </div>
+                    <div class="col-md-8">
+                        <table class="table table-borderless">
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Full Name</th>
+                                    <td>{{ user.get_full_name|default:"Not set" }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Email</th>
+                                    <td>{{ user.email|default:"Not set" }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Date Joined</th>
+                                    <td>{{ user.date_joined|date:"F d, Y" }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="d-flex justify-content-start mt-3">
+                            <a href="#" class="btn btn-danger me-2">Edit Profile</a>
+                            <a href="#" class="btn btn-outline-secondary">My Saved Recipes</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Optional: Bio or About section -->
+                <div class="mt-4">
+                    <h5 class="fw-semibold">Bio / About Me</h5>
+                    <p class="text-muted">
+                        {{ user.profile.bio|default:"No bio yet. Add a bio to let others know more about you." }}
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

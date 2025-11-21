@@ -19,48 +19,26 @@
         </a>
     </div>
 
-    <div class="row g-4">
+    <!-- Search Form -->
+    <div class="row mb-4">
+        <div class="col-md-6 mx-auto">
+            <!-- NEW: Use input-group for proper sizing -->
+            <form method="get">
+                <div class="input-group">
+                    <input type="text" name="q" id="search-input" class="form-control" placeholder="Search recipes..."
+                        value="{{ search_query }}">
+                    <button type="submit" class="btn btn-danger">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Recipes -->
+    <div class="row g-4" id="recipes-container">
         {% for recipe in recipes %}
         <div class="col-md-4 col-sm-6">
-            <a href="{% url 'recipe_detail' recipe.pk %}" class="text-decoration-none text-dark">
-
-                <div class="card shadow-sm recipe-card h-100">
-
-                    {% if recipe.image %}
-                    <img src="{{ recipe.image.url }}" class="card-img-top recipe-img" alt="{{ recipe.title }}">
-                    {% else %}
-                    <div
-                        class="recipe-placeholder bg-secondary text-white d-flex align-items-center justify-content-center">
-                        No Image
-                    </div>
-                    {% endif %}
-
-                    <div class="card-body">
-                        <h5 class="card-title fw-bold">{{ recipe.title }}</h5>
-                        <p class="card-text text-muted">{{ recipe.description|truncatewords:20 }}</p>
-                    </div>
-                </div>
-
-            </a>
-        </div>
-        {% empty %}
-        <p class="text-muted">No recipes yet. Be the first to add one!</p>
-        {% endfor %}
-    </div>
-</div>
-
-
-<!-- Favorite recipe -->
-<hr class="my-5">
-
-<h2 class="fw-bold caveat text-center mb-4">Favorite Recipes</h2>
-
-<div class="row g-4">
-    {% for recipe in favorites %}
-    <div class="col-md-4 col-sm-6">
-        <a href="{% url 'recipe_detail' recipe.pk %}" class="text-decoration-none text-dark">
-
-            <div class="card shadow-sm recipe-card h-100">
+            <div class="card shadow-sm recipe-card h-100" data-href="{% url 'recipe_detail' recipe.pk %}"
+                style="cursor:pointer; display:flex; flex-direction:column;">
 
                 {% if recipe.image %}
                 <img src="{{ recipe.image.url }}" class="card-img-top recipe-img" alt="{{ recipe.title }}">
@@ -71,17 +49,114 @@
                 </div>
                 {% endif %}
 
-                <div class="card-body">
+                <div class="card-body d-flex flex-column">
+
                     <h5 class="card-title fw-bold">{{ recipe.title }}</h5>
                     <p class="card-text text-muted">{{ recipe.description|truncatewords:20 }}</p>
-                </div>
-            </div>
 
-        </a>
+                    <!-- FOOTER BUTTONS AT BOTTOM -->
+                    <div class="recipe-footer mt-auto d-flex justify-content-between align-items-center">
+
+                        <!-- Like Button -->
+                        {% if user.is_authenticated %}
+                        <form action="{% url 'recipe_like' recipe.pk %}" method="post" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                ❤️ {{ recipe.total_likes }}
+                            </button>
+                        </form>
+                        {% else %}
+                        <span class="btn btn-outline-secondary btn-sm">❤️ {{ recipe.total_likes }}</span>
+                        {% endif %}
+
+                        <!-- Save / Unsave Button -->
+                        {% if user.is_authenticated %}
+                        <form action="{% url 'toggle_save' recipe.pk %}" method="post" class="d-inline">
+                            {% csrf_token %}
+                            {% if user in recipe.saved_by.all %}
+                            <input type="hidden" name="action" value="unsave">
+                            <button type="submit" class="btn btn-outline-secondary btn-sm">❌ Unsave</button>
+                            {% else %}
+                            <input type="hidden" name="action" value="save">
+                            <button type="submit" class="btn btn-outline-primary btn-sm">💾 Save</button>
+                            {% endif %}
+                        </form>
+                        {% endif %}
+
+                    </div>
+
+                </div> <!-- end card-body -->
+
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-muted">No recipes yet. Be the first to add one!</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Favorite Recipes -->
+<hr class="my-5">
+
+<h2 class="fw-bold caveat text-center mb-4">Favorite Recipes</h2>
+
+<div class="row g-4">
+    {% for recipe in favorites %}
+    <div class="col-md-4 col-sm-6">
+        <div class="card shadow-sm recipe-card h-100" data-href="{% url 'recipe_detail' recipe.pk %}"
+            style="cursor:pointer; display:flex; flex-direction:column;">
+
+            {% if recipe.image %}
+            <img src="{{ recipe.image.url }}" class="card-img-top recipe-img" alt="{{ recipe.title }}">
+            {% else %}
+            <div class="recipe-placeholder bg-secondary text-white d-flex align-items-center justify-content-center">
+                No Image
+            </div>
+            {% endif %}
+
+            <div class="card-body d-flex flex-column">
+
+                <h5 class="card-title fw-bold">{{ recipe.title }}</h5>
+                <p class="card-text text-muted">{{ recipe.description|truncatewords:20 }}</p>
+
+                <!-- Footer Buttons -->
+                <div class="recipe-footer mt-auto d-flex justify-content-between align-items-center">
+
+                    <!-- Like Button -->
+                    {% if user.is_authenticated %}
+                    <form action="{% url 'recipe_like' recipe.pk %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                            ❤️ {{ recipe.total_likes }}
+                        </button>
+                    </form>
+                    {% else %}
+                    <span class="btn btn-outline-secondary btn-sm">❤️ {{ recipe.total_likes }}</span>
+                    {% endif %}
+
+                    <!-- Save / Unsave Button -->
+                    {% if user.is_authenticated %}
+                    <form action="{% url 'toggle_save' recipe.pk %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        {% if user in recipe.saved_by.all %}
+                        <input type="hidden" name="action" value="unsave">
+                        <button type="submit" class="btn btn-outline-secondary btn-sm">❌ Unsave</button>
+                        {% else %}
+                        <input type="hidden" name="action" value="save">
+                        <button type="submit" class="btn btn-outline-danger btn-sm">💾 Save</button>
+                        {% endif %}
+                    </form>
+                    {% endif %}
+
+                </div>
+
+            </div>
+        </div>
     </div>
     {% empty %}
     <p class="text-muted text-center">No favorite recipes yet.</p>
     {% endfor %}
 </div>
 
+<script src="{% static 'recipes/recipe_list.js' %}"></script>
 {% endblock %}

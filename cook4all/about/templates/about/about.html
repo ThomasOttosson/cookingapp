@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'about/about.css' %}">
+
+<div class="about-container text-center">
+    <h1 class="about-title">Welcome to Cook & Look! 🍳</h1>
+    <p class="about-subtitle">Brought to life with pure passion and the CodeCraze Hackathon spirit!</p>
+
+    <div class="about-card shadow-lg p-5 my-5 mx-auto">
+        <h2>Why This Project Exists</h2>
+        <p>
+            Cook & Look was created by a team of one enthusiastic coder during the <strong>CodeCraze Hackathon</strong>!
+            Our mission is simple: make cooking fun, accessible, and social for everyone.
+        </p>
+        <p>
+            From discovering new recipes to saving your favorites and sharing culinary creations,
+            we wanted to combine creativity, technology, and delicious food into one seamless platform.
+        </p>
+        <p>
+            We hope you enjoy exploring, saving, and sharing your recipes as much as we enjoyed building this app!
+        </p>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'recipe_list' %}" class="btn btn-danger btn-lg">
+            🍽 Explore Recipes
+        </a>
+    </div>
+</div>
+{% endblock %}

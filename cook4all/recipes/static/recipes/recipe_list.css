@@ -12,8 +12,29 @@
 /* Card hover effect */
 .recipe-card {
     transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+    /* NEW: Make cards flexible so footer stays at bottom */
+    display: flex;
+    flex-direction: column;
 }
 
+/* Ensure card-body also supports flex layout */
+.recipe-card .card-body {
+    display: flex;
+    flex-direction: column;
+}
+
+/* NEW: Footer container that sticks to bottom */
+.recipe-footer {
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Hover effect */
 .recipe-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 20px rgba(0,0,0,0.15);
@@ -22,4 +43,12 @@
 .caveat {
     font-family: 'Caveat', cursive;
     text-decoration: underline;
+}
+
+form.d-flex input.form-control {
+    border-radius: 50px 0 0 50px;
+}
+
+form.d-flex button {
+    border-radius: 0 50px 50px 0;
 }

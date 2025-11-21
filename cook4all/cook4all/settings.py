@@ -41,9 +41,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    'cloudinary',
+    'cloudinary_storage',
     'home',
     'recipes',
+    'users',
     'widget_tweaks',
+    'about',
+    'contact',
 
     # django-allauth
     'django.contrib.sites',          # REQUIRED
@@ -148,3 +154,13 @@ LOGOUT_REDIRECT_URL = '/'
 SITE_ID = 1
 
 ACCOUNT_LOGOUT_ON_GET = False
+
+# Cloudinary storage config
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+}
+
+# Use Cloudinary for media storage
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'

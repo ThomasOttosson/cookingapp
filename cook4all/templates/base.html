@@ -47,36 +47,39 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link {% if request.path == '/about/' %}active{% endif %}" href="#">About</a>
+                            <a class="nav-link {% if request.path == '/about/' %}active{% endif %}" href="{% url 'about' %}">About</a>
                         </li>
 
                         <li class="nav-item">
                             <a class="nav-link {% if request.path == '/contact/' %}active{% endif %}"
-                                href="#">Contact</a>
+                                href="{% url 'contact' %}">Contact</a>
                         </li>
                     </ul>
 
                     <!-- Right links -->
                     <ul class="navbar-nav ms-auto">
                         {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link">{{ user.username }}</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                My Account
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
+                                <li><a class="dropdown-item" href="{% url 'saved_recipes' %}">Saved Recipes</a></li>
+                                <li><a class="dropdown-item" href="{% url 'account_info' %}">Account Info</a></li>
+                                <!-- Optional: add more links here, like Bio, Settings, etc. -->
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="{% url 'logout_confirm' %}">Logout</a></li>
+                            </ul>
                         </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.url_name == 'logout_confirm' %}active{% endif %}"
-                                href="{% url 'logout_confirm' %}">Logout</a>
-                        </li>
-
                         {% else %}
                         <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.url_name == 'login' %}active{% endif %}"
-                                href="{% url 'login' %}">Sign In</a>
+                            <a class="nav-link" href="{% url 'login' %}">Sign In</a>
                         </li>
-
                         <li class="nav-item">
-                            <a class="nav-link {% if request.resolver_match.url_name == 'register' %}active{% endif %}"
-                                href="{% url 'register' %}">Create Account</a>
+                            <a class="nav-link" href="{% url 'register' %}">Create Account</a>
                         </li>
                         {% endif %}
                     </ul>
@@ -136,6 +139,9 @@
 
     <!-- Bootstrap JS (requires Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Javascript -->
+    <script src="{% static 'recipes/recipe_list.js' %}"></script>
 </body>
 
 </html>
