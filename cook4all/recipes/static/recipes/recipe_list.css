@@ -1,0 +1,25 @@
+/* Make images uniform and clean */
+.recipe-img {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Placeholder when no image */
+.recipe-placeholder {
+    height: 200px;
+}
+
+/* Card hover effect */
+.recipe-card {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.recipe-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.caveat {
+    font-family: 'Caveat', cursive;
+    text-decoration: underline;
+}

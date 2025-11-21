@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'recipes/recipe_list.css' %}">
+
+<div class="container mt-5">
+
+    <!-- Centered Heading -->
+    <div class="text-center mb-4">
+        <h1 class="fw-bold caveat">Recipes</h1>
+    </div>
+
+    <!-- Button aligned to right -->
+    <div class="d-flex justify-content-end align-items-center mb-4">
+        <a href="{% url 'recipe_create' %}" class="btn btn-danger">
+            <i class="fa-solid fa-plus"></i> Add New Recipe
+        </a>
+    </div>
+
+    <div class="row g-4">
+        {% for recipe in recipes %}
+        <div class="col-md-4 col-sm-6">
+            <a href="{% url 'recipe_detail' recipe.pk %}" class="text-decoration-none text-dark">
+
+                <div class="card shadow-sm recipe-card h-100">
+
+                    {% if recipe.image %}
+                    <img src="{{ recipe.image.url }}" class="card-img-top recipe-img" alt="{{ recipe.title }}">
+                    {% else %}
+                    <div
+                        class="recipe-placeholder bg-secondary text-white d-flex align-items-center justify-content-center">
+                        No Image
+                    </div>
+                    {% endif %}
+
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">{{ recipe.title }}</h5>
+                        <p class="card-text text-muted">{{ recipe.description|truncatewords:20 }}</p>
+                    </div>
+                </div>
+
+            </a>
+        </div>
+        {% empty %}
+        <p class="text-muted">No recipes yet. Be the first to add one!</p>
+        {% endfor %}
+    </div>
+</div>
+
+
+<!-- Favorite recipe -->
+<hr class="my-5">
+
+<h2 class="fw-bold caveat text-center mb-4">Favorite Recipes</h2>
+
+<div class="row g-4">
+    {% for recipe in favorites %}
+    <div class="col-md-4 col-sm-6">
+        <a href="{% url 'recipe_detail' recipe.pk %}" class="text-decoration-none text-dark">
+
+            <div class="card shadow-sm recipe-card h-100">
+
+                {% if recipe.image %}
+                <img src="{{ recipe.image.url }}" class="card-img-top recipe-img" alt="{{ recipe.title }}">
+                {% else %}
+                <div
+                    class="recipe-placeholder bg-secondary text-white d-flex align-items-center justify-content-center">
+                    No Image
+                </div>
+                {% endif %}
+
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">{{ recipe.title }}</h5>
+                    <p class="card-text text-muted">{{ recipe.description|truncatewords:20 }}</p>
+                </div>
+            </div>
+
+        </a>
+    </div>
+    {% empty %}
+    <p class="text-muted text-center">No favorite recipes yet.</p>
+    {% endfor %}
+</div>
+
+{% endblock %}

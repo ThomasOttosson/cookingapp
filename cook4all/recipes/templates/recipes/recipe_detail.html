@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'recipes/recipe_detail.css' %}">
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0 rounded-4 mb-4">
+
+                {% if recipe.image %}
+                <img src="{{ recipe.image.url }}" 
+                     alt="{{ recipe.title }}" 
+                     class="card-img-top recipe-image">
+                {% endif %}
+
+                <div class="card-body p-4">
+                    <h1 class="fw-bold mb-3 text-center">{{ recipe.title }}</h1>
+
+                    <p class="text-muted text-center">
+                        Posted by 
+                        <strong>{{ recipe.author.username }}</strong> 
+                        on {{ recipe.created_at|date:"M d, Y" }}
+                    </p>
+
+                    <hr>
+
+                    <h4 class="mt-4 fw-semibold">Description</h4>
+                    <p>{{ recipe.description }}</p>
+
+                    <h4 class="mt-4 fw-semibold">Ingredients</h4>
+                    <div class="bg-light p-3 rounded">
+                        {{ recipe.ingredients|linebreaks }}
+                    </div>
+
+                    <h4 class="mt-4 fw-semibold">Instructions</h4>
+                    <div class="bg-light p-3 rounded">
+                        {{ recipe.instructions|linebreaks }}
+                    </div>
+
+                    <div class="mt-4 text-center">
+                        <a href="{% url 'recipe_list' %}" class="btn btn-secondary">
+                            <i class="fa-solid fa-arrow-left"></i> Back to Recipes
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

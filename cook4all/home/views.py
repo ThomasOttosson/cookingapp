@@ -2,11 +2,20 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 
-from django.contrib.auth.views import LogoutView
-from django.views.generic import TemplateView
+from django.contrib.auth import logout
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
 
 
-# Create your views here.
+@login_required
+def logout_confirm(request):
+    return render(request, "logout_confirm.html")
+
+
+@require_POST
+def logout_view(request):
+    logout(request)
+    return redirect("home")
 
 
 def home(request):

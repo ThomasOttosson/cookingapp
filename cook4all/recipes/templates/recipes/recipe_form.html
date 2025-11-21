@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'recipes/recipe_form.css' %}">
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-4">
+
+                    <h2 class="text-center fw-bold mb-4">Add a Recipe</h2>
+
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <!-- Render each form field manually for better styling -->
+                        {% for field in form %}
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">
+                                    {{ field.label }}
+                                </label>
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <div class="form-text">{{ field.help_text }}</div>
+                                {% endif %}
+                                {% if field.errors %}
+                                    <div class="text-danger small">{{ field.errors }}</div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-danger btn-lg rounded-3">
+                                <i class="fa-solid fa-floppy-disk me-2"></i> Save Recipe
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

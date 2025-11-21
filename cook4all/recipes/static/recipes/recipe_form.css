@@ -1,0 +1,19 @@
+/* Make Django default widgets look better with Bootstrap */
+input, textarea, select {
+    border-radius: 0.5rem !important;
+    padding: 0.6rem !important;
+    width: 100%;
+    border: 1px solid #ced4da;
+}
+
+textarea {
+    min-height: 120px;
+}
+
+.card {
+    border-radius: 1rem;
+}
+
+button[type="submit"] {
+    font-weight: 600;
+}
