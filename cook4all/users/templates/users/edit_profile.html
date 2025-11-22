@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'users/profile.css' %}">
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0 rounded-4 p-4">
+
+                <!-- Header -->
+                <div class="text-center mb-4">
+                    <h1 class="fw-bold caveat">Edit Profile</h1>
+                    <p class="text-muted">Update your account information</p>
+                </div>
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="row">
+                        <!-- Profile Image -->
+                        <div class="col-md-4 text-center mb-3">
+                            <img src="{% if user.profile.profile_image %}{{ user.profile.profile_image.url }}{% else %}{% static 'users/default_profile.png' %}{% endif %}"
+                                 class="rounded-circle img-fluid profile-pic mb-2">
+
+                            <div class="mt-2">
+                                {{ profile_form.profile_image }}
+                            </div>
+                        </div>
+
+                        <!-- User Fields -->
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">First Name</label>
+                                {{ user_form.first_name }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Last Name</label>
+                                {{ user_form.last_name }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Email</label>
+                                {{ user_form.email }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Bio</label>
+                                {{ profile_form.bio }}
+                            </div>
+
+                            <button type="submit" class="btn btn-danger">Save Changes</button>
+                            <a href="{% url 'account_info' %}" class="btn btn-outline-secondary ms-2">Cancel</a>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

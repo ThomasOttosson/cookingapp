@@ -22,7 +22,6 @@
     <!-- Search Form -->
     <div class="row mb-4">
         <div class="col-md-6 mx-auto">
-            <!-- NEW: Use input-group for proper sizing -->
             <form method="get">
                 <div class="input-group">
                     <input type="text" name="q" id="search-input" class="form-control" placeholder="Search recipes..."
@@ -43,8 +42,7 @@
                 {% if recipe.image %}
                 <img src="{{ recipe.image.url }}" class="card-img-top recipe-img" alt="{{ recipe.title }}">
                 {% else %}
-                <div
-                    class="recipe-placeholder bg-secondary text-white d-flex align-items-center justify-content-center">
+                <div class="recipe-placeholder bg-secondary text-white d-flex align-items-center justify-content-center">
                     No Image
                 </div>
                 {% endif %}
@@ -54,39 +52,50 @@
                     <h5 class="card-title fw-bold">{{ recipe.title }}</h5>
                     <p class="card-text text-muted">{{ recipe.description|truncatewords:20 }}</p>
 
-                    <!-- FOOTER BUTTONS AT BOTTOM -->
+                    <!-- Footer Buttons -->
                     <div class="recipe-footer mt-auto d-flex justify-content-between align-items-center">
 
-                        <!-- Like Button -->
-                        {% if user.is_authenticated %}
-                        <form action="{% url 'recipe_like' recipe.pk %}" method="post" class="d-inline">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-outline-danger btn-sm">
-                                ❤️ {{ recipe.total_likes }}
-                            </button>
-                        </form>
-                        {% else %}
-                        <span class="btn btn-outline-secondary btn-sm">❤️ {{ recipe.total_likes }}</span>
-                        {% endif %}
+                        <!-- Left: Like + Comments -->
+                        <div class="d-flex align-items-center gap-2">
 
-                        <!-- Save / Unsave Button -->
-                        {% if user.is_authenticated %}
-                        <form action="{% url 'toggle_save' recipe.pk %}" method="post" class="d-inline">
-                            {% csrf_token %}
-                            {% if user in recipe.saved_by.all %}
-                            <input type="hidden" name="action" value="unsave">
-                            <button type="submit" class="btn btn-outline-secondary btn-sm">❌ Unsave</button>
+                            <!-- Like Button -->
+                            {% if user.is_authenticated %}
+                            <form action="{% url 'recipe_like' recipe.pk %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                    ❤️ {{ recipe.total_likes }}
+                                </button>
+                            </form>
                             {% else %}
-                            <input type="hidden" name="action" value="save">
-                            <button type="submit" class="btn btn-outline-primary btn-sm">💾 Save</button>
+                            <span class="btn btn-outline-secondary btn-sm">❤️ {{ recipe.total_likes }}</span>
                             {% endif %}
-                        </form>
-                        {% endif %}
+
+                            <!-- Comments Counter -->
+                            <span class="btn btn-outline-secondary btn-sm">
+                                💬 {{ recipe.comments.count }}
+                            </span>
+
+                        </div>
+
+                        <!-- Right: Save Button -->
+                        <div>
+                            {% if user.is_authenticated %}
+                            <form action="{% url 'toggle_save' recipe.pk %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                {% if user in recipe.saved_by.all %}
+                                <input type="hidden" name="action" value="unsave">
+                                <button type="submit" class="btn btn-outline-secondary btn-sm">❌ Unsave</button>
+                                {% else %}
+                                <input type="hidden" name="action" value="save">
+                                <button type="submit" class="btn btn-outline-danger btn-sm">💾 Save</button>
+                                {% endif %}
+                            </form>
+                            {% endif %}
+                        </div>
 
                     </div>
 
-                </div> <!-- end card-body -->
-
+                </div>
             </div>
         </div>
         {% empty %}
@@ -95,68 +104,82 @@
     </div>
 </div>
 
-<!-- Favorite Recipes -->
+<!-- Favorite Recipes Section -->
 <hr class="my-5">
 
-<h2 class="fw-bold caveat text-center mb-4">Favorite Recipes</h2>
+<div class="container">
 
-<div class="row g-4">
-    {% for recipe in favorites %}
-    <div class="col-md-4 col-sm-6">
-        <div class="card shadow-sm recipe-card h-100" data-href="{% url 'recipe_detail' recipe.pk %}"
-            style="cursor:pointer; display:flex; flex-direction:column;">
+    <h2 class="fw-bold caveat text-center mb-4">Favorite Recipes</h2>
 
-            {% if recipe.image %}
-            <img src="{{ recipe.image.url }}" class="card-img-top recipe-img" alt="{{ recipe.title }}">
-            {% else %}
-            <div class="recipe-placeholder bg-secondary text-white d-flex align-items-center justify-content-center">
-                No Image
-            </div>
-            {% endif %}
+    <div class="row g-4">
 
-            <div class="card-body d-flex flex-column">
+        {% for recipe in favorites %}
+        <div class="col-md-4 col-sm-6">
+            <div class="card shadow-sm recipe-card h-100" data-href="{% url 'recipe_detail' recipe.pk %}"
+                style="cursor:pointer; display:flex; flex-direction:column;">
 
-                <h5 class="card-title fw-bold">{{ recipe.title }}</h5>
-                <p class="card-text text-muted">{{ recipe.description|truncatewords:20 }}</p>
+                {% if recipe.image %}
+                <img src="{{ recipe.image.url }}" class="card-img-top recipe-img" alt="{{ recipe.title }}">
+                {% else %}
+                <div class="recipe-placeholder bg-secondary text-white d-flex align-items-center justify-content-center">
+                    No Image
+                </div>
+                {% endif %}
 
-                <!-- Footer Buttons -->
-                <div class="recipe-footer mt-auto d-flex justify-content-between align-items-center">
+                <div class="card-body d-flex flex-column">
 
-                    <!-- Like Button -->
-                    {% if user.is_authenticated %}
-                    <form action="{% url 'recipe_like' recipe.pk %}" method="post" class="d-inline">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-outline-danger btn-sm">
-                            ❤️ {{ recipe.total_likes }}
-                        </button>
-                    </form>
-                    {% else %}
-                    <span class="btn btn-outline-secondary btn-sm">❤️ {{ recipe.total_likes }}</span>
-                    {% endif %}
+                    <h5 class="card-title fw-bold">{{ recipe.title }}</h5>
+                    <p class="card-text text-muted">{{ recipe.description|truncatewords:20 }}</p>
 
-                    <!-- Save / Unsave Button -->
-                    {% if user.is_authenticated %}
-                    <form action="{% url 'toggle_save' recipe.pk %}" method="post" class="d-inline">
-                        {% csrf_token %}
-                        {% if user in recipe.saved_by.all %}
-                        <input type="hidden" name="action" value="unsave">
-                        <button type="submit" class="btn btn-outline-secondary btn-sm">❌ Unsave</button>
-                        {% else %}
-                        <input type="hidden" name="action" value="save">
-                        <button type="submit" class="btn btn-outline-danger btn-sm">💾 Save</button>
-                        {% endif %}
-                    </form>
-                    {% endif %}
+                    <div class="recipe-footer mt-auto d-flex justify-content-between align-items-center">
+
+                        <!-- Left: Like + Comments -->
+                        <div class="d-flex align-items-center gap-2">
+
+                            {% if user.is_authenticated %}
+                            <form action="{% url 'recipe_like' recipe.pk %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                    ❤️ {{ recipe.total_likes }}
+                                </button>
+                            </form>
+                            {% else %}
+                            <span class="btn btn-outline-secondary btn-sm">❤️ {{ recipe.total_likes }}</span>
+                            {% endif %}
+
+                            <span class="btn btn-outline-secondary btn-sm">
+                                💬 {{ recipe.comments.count }}
+                            </span>
+                        </div>
+
+                        <!-- Right: Save -->
+                        <div>
+                            {% if user.is_authenticated %}
+                            <form action="{% url 'toggle_save' recipe.pk %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                {% if user in recipe.saved_by.all %}
+                                <input type="hidden" name="action" value="unsave">
+                                <button type="submit" class="btn btn-outline-secondary btn-sm">❌ Unsave</button>
+                                {% else %}
+                                <input type="hidden" name="action" value="save">
+                                <button type="submit" class="btn btn-outline-danger btn-sm">💾 Save</button>
+                                {% endif %}
+                            </form>
+                            {% endif %}
+                        </div>
+
+                    </div>
 
                 </div>
-
             </div>
         </div>
+        {% empty %}
+        <p class="text-muted text-center">No favorite recipes yet.</p>
+        {% endfor %}
+
     </div>
-    {% empty %}
-    <p class="text-muted text-center">No favorite recipes yet.</p>
-    {% endfor %}
 </div>
 
 <script src="{% static 'recipes/recipe_list.js' %}"></script>
+
 {% endblock %}
