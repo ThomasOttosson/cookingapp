@@ -70,10 +70,10 @@
                             <span class="btn btn-outline-secondary btn-sm">❤️ {{ recipe.total_likes }}</span>
                             {% endif %}
 
-                            <!-- Comments Counter -->
-                            <span class="btn btn-outline-secondary btn-sm">
+                            <!-- Comments Counter as link -->
+                            <a href="{% url 'recipe_detail' recipe.pk %}#comments-section" class="btn btn-outline-secondary btn-sm">
                                 💬 {{ recipe.comments.count }}
-                            </span>
+                            </a>
 
                         </div>
 
@@ -147,9 +147,10 @@
                             <span class="btn btn-outline-secondary btn-sm">❤️ {{ recipe.total_likes }}</span>
                             {% endif %}
 
-                            <span class="btn btn-outline-secondary btn-sm">
+                            <!-- Comments Counter as link -->
+                            <a href="{% url 'recipe_detail' recipe.pk %}#comments-section" class="btn btn-outline-secondary btn-sm">
                                 💬 {{ recipe.comments.count }}
-                            </span>
+                            </a>
                         </div>
 
                         <!-- Right: Save -->

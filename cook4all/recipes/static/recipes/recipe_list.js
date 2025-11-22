@@ -1,5 +1,3 @@
-// recipe_list.js
-
 document.addEventListener("DOMContentLoaded", function () {
 
     // -------------------------------
@@ -72,5 +70,73 @@ document.addEventListener("DOMContentLoaded", function () {
                 .catch(err => console.error("Search error:", err));
         });
     }
+
+    // -------------------------------
+    // Smooth scroll for comment links
+    // -------------------------------
+    const commentLinks = document.querySelectorAll('a[href*="#comments-section"]');
+
+    commentLinks.forEach(link => {
+        link.addEventListener("click", function (event) {
+            const targetUrl = link.href.split("#")[0];
+            const targetHash = link.hash;
+
+            // If same page, scroll smoothly
+            if (window.location.href.split("#")[0] === targetUrl) {
+                event.preventDefault();
+                const target = document.querySelector(targetHash);
+                if (target) {
+                    const offset = 100; // adjust as needed
+                    const bodyRect = document.body.getBoundingClientRect().top;
+                    const elementRect = target.getBoundingClientRect().top;
+                    const elementPosition = elementRect - bodyRect;
+                    const offsetPosition = elementPosition - offset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: "smooth"
+                    });
+                }
+            } else {
+                // For cross-page links (from recipe_list to recipe_detail)
+                // Store in localStorage that we need to scroll to comments
+                localStorage.setItem("scrollToComments", link.href);
+            }
+        });
+    });
+
+    // -------------------------------
+    // Check on page load if we need to scroll to comments
+    // -------------------------------
+    window.addEventListener("load", function() { // wait for all images/content
+        if (localStorage.getItem("scrollToComments")) {
+            const scrollUrl = localStorage.getItem("scrollToComments");
+            const [url, hash] = scrollUrl.split("#");
+
+            // Only scroll if we are on the target page
+            if (window.location.href.split("#")[0] === url) {
+                const target = document.getElementById(hash);
+                if (target) {
+                    const offset = 100;
+                    
+                    // Optional small delay to ensure layout is fully loaded
+                    setTimeout(() => {
+                        const bodyRect = document.body.getBoundingClientRect().top;
+                        const elementRect = target.getBoundingClientRect().top;
+                        const elementPosition = elementRect - bodyRect;
+                        const offsetPosition = elementPosition - offset;
+
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: "smooth"
+                        });
+
+                        // Clear the flag after scrolling
+                        localStorage.removeItem("scrollToComments");
+                    }, 100); // 100ms delay
+                }
+            }
+        }
+    });
 
 });
