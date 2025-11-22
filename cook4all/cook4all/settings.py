@@ -135,7 +135,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = 'home/static/'
+
+# Additional directories Django will search for static files
+STATICFILES_DIRS = [
+    BASE_DIR / 'home' / 'static',  # points to your home/static folder
+]
+
+# Folder where collectstatic will copy static files for production
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -162,5 +171,6 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
 }
 
+MEDIA_URL = '/media/'
 # Use Cloudinary for media storage
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'

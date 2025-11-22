@@ -55,7 +55,7 @@
                     <!-- Footer Buttons -->
                     <div class="recipe-footer mt-auto d-flex justify-content-between align-items-center">
 
-                        <!-- Left: Like + Comments -->
+                        <!-- Left: Like + Comments + Rating -->
                         <div class="d-flex align-items-center gap-2">
 
                             <!-- Like Button -->
@@ -70,10 +70,16 @@
                             <span class="btn btn-outline-secondary btn-sm">❤️ {{ recipe.total_likes }}</span>
                             {% endif %}
 
-                            <!-- Comments Counter as link -->
+                            <!-- Comments Counter -->
                             <a href="{% url 'recipe_detail' recipe.pk %}#comments-section" class="btn btn-outline-secondary btn-sm">
                                 💬 {{ recipe.comments.count }}
                             </a>
+
+                            <!-- Average Rating -->
+                            <div class="d-flex align-items-center gap-1">
+                                <i class="fa-solid fa-star text-warning"></i>
+                                <span>{{ recipe.average_rating|floatformat:1 }}</span>
+                            </div>
 
                         </div>
 
@@ -99,7 +105,7 @@
             </div>
         </div>
         {% empty %}
-        <p class="text-muted">No recipes yet. Be the first to add one!</p>
+        <p class="text-muted text-center">No recipes yet. Be the first to add one!</p>
         {% endfor %}
     </div>
 </div>
@@ -109,7 +115,7 @@
 
 <div class="container">
 
-    <h2 class="fw-bold caveat text-center mb-4">Favorite Recipes</h2>
+    <h2 class="fw-bold caveat text-center mb-4">Top 3 Liked Recipes</h2>
 
     <div class="row g-4">
 
@@ -133,7 +139,7 @@
 
                     <div class="recipe-footer mt-auto d-flex justify-content-between align-items-center">
 
-                        <!-- Left: Like + Comments -->
+                        <!-- Left: Like + Comments + Rating -->
                         <div class="d-flex align-items-center gap-2">
 
                             {% if user.is_authenticated %}
@@ -147,13 +153,20 @@
                             <span class="btn btn-outline-secondary btn-sm">❤️ {{ recipe.total_likes }}</span>
                             {% endif %}
 
-                            <!-- Comments Counter as link -->
+                            <!-- Comments Counter -->
                             <a href="{% url 'recipe_detail' recipe.pk %}#comments-section" class="btn btn-outline-secondary btn-sm">
                                 💬 {{ recipe.comments.count }}
                             </a>
+
+                            <!-- Average Rating -->
+                            <div class="d-flex align-items-center gap-1">
+                                <i class="fa-solid fa-star text-warning"></i>
+                                <span>{{ recipe.average_rating|floatformat:1 }}</span>
+                            </div>
+
                         </div>
 
-                        <!-- Right: Save -->
+                        <!-- Right: Save Button -->
                         <div>
                             {% if user.is_authenticated %}
                             <form action="{% url 'toggle_save' recipe.pk %}" method="post" class="d-inline">

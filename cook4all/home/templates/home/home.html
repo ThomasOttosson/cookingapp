@@ -1,13 +1,23 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Home - Cook4All{% endblock %}
 
 {% block content %}
-<section class="hero text-center py-5 bg-light">
-  <div class="container">
-    <h2 class="display-4">Welcome to Cook & Look!</h2>
-    <p class="lead">Your favorite place for delicious recipes.</p>
-    <a href="#" class="btn btn-danger btn-lg mt-3">View Recipes</a>
-  </div>
+<section class="position-relative hero-section">
+    <!-- HERO IMAGE -->
+    <img src="{% static 'home/images/hero.jpg' %}" 
+         class="img-fluid w-100 hero-img" 
+         alt="Hero Image">
+
+    <!-- DARK OVERLAY -->
+    <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-25"></div>
+
+    <!-- TEXT OVERLAY -->
+    <div class="hero-text position-absolute top-50 start-50 translate-middle text-center text-white">
+        <h2 class="display-4">Welcome to Cook & Look!</h2>
+        <p class="lead">Your favorite place for delicious recipes.</p>
+        <a href="{% url 'recipe_list' %}" class="btn btn-danger btn-lg mt-3">View Recipes</a>
+    </div>
 </section>
 {% endblock %}

@@ -12,4 +12,5 @@ urlpatterns = [
     path('ajax/search/', ajax_search_recipes, name='ajax_search_recipes'),
     path('recipe/<int:pk>/comment/', views.add_comment, name='add_comment'),
     path('recipe/<int:pk>/comment/<int:comment_id>/delete/', views.delete_comment, name='delete_comment'),
+    path('<int:pk>/rate/', views.recipe_rate, name='recipe_rate'),
 ]

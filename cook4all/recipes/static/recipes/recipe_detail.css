@@ -4,3 +4,15 @@
     border-top-left-radius: 1rem;
     border-top-right-radius: 1rem;
 }
+
+.star-rating button {
+        font-size: 1.5rem;
+        color: gold;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+    .star-rating button:hover,
+    .star-rating button:hover ~ button {
+        color: darkorange;
+}
