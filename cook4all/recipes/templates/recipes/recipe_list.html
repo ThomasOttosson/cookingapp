@@ -12,6 +12,49 @@
         <h1 class="fw-bold caveat">Recipes</h1>
     </div>
 
+    <!-- Dummy Filter Buttons (Centered) -->
+    <div class="text-center mb-4">
+
+        <div class="btn-group flex-wrap" role="group" aria-label="Filter Buttons">
+
+            <a href="
+    {% if filter_option == 'most_liked' %}
+        ?
+        {% if search_query %}q={{ search_query }}{% endif %}
+    {% else %}
+        ?filter=most_liked
+        {% if search_query %}&q={{ search_query }}{% endif %}
+    {% endif %}
+" class="btn m-1 
+      {% if filter_option == 'most_liked' %}btn-danger{% else %}btn-outline-danger{% endif %}">
+                Most Liked Recipes
+            </a>
+
+            <a href="
+    {% if filter_option == 'top_rated' %}
+        ?
+        {% if search_query %}q={{ search_query }}{% endif %}
+    {% else %}
+        ?filter=top_rated
+        {% if search_query %}&q={{ search_query }}{% endif %}
+    {% endif %}
+" class="btn m-1 
+      {% if filter_option == 'top_rated' %}btn-danger{% else %}btn-outline-danger{% endif %}">
+                Top Rated Recipes
+            </a>
+
+            <button class="btn btn-outline-danger m-1">Breakfast</button>
+
+            <button class="btn btn-outline-danger m-1">Lunch</button>
+
+            <button class="btn btn-outline-danger m-1">Dinner</button>
+
+            <button class="btn btn-outline-danger m-1">Desserts</button>
+
+        </div>
+
+    </div>
+
     <!-- Button aligned to right -->
     <div class="d-flex justify-content-end align-items-center mb-4">
         <a href="{% url 'recipe_create' %}" class="btn btn-danger">
@@ -42,7 +85,8 @@
                 {% if recipe.image %}
                 <img src="{{ recipe.image.url }}" class="card-img-top recipe-img" alt="{{ recipe.title }}">
                 {% else %}
-                <div class="recipe-placeholder bg-secondary text-white d-flex align-items-center justify-content-center">
+                <div
+                    class="recipe-placeholder bg-secondary text-white d-flex align-items-center justify-content-center">
                     No Image
                 </div>
                 {% endif %}
@@ -71,7 +115,8 @@
                             {% endif %}
 
                             <!-- Comments Counter -->
-                            <a href="{% url 'recipe_detail' recipe.pk %}#comments-section" class="btn btn-outline-secondary btn-sm">
+                            <a href="{% url 'recipe_detail' recipe.pk %}#comments-section"
+                                class="btn btn-outline-secondary btn-sm">
                                 💬 {{ recipe.comments.count }}
                             </a>
 
@@ -110,6 +155,45 @@
     </div>
 </div>
 
+<!-- Pagination Controls -->
+<div class="d-flex flex-column align-items-center mt-4">
+
+    <!-- Previous / Next buttons -->
+    <div class="mb-2">
+        {% if recipes.has_previous %}
+        <a href="?page={{ recipes.previous_page_number }}
+                    {% if search_query %}&q={{ search_query }}{% endif %}
+                    {% if filter_option %}&filter={{ filter_option }}{% endif %}" class="btn btn-outline-danger me-2">
+            ← Previous
+        </a>
+        {% endif %}
+
+        {% if recipes.has_next %}
+        <a href="?page={{ recipes.next_page_number }}
+                    {% if search_query %}&q={{ search_query }}{% endif %}
+                    {% if filter_option %}&filter={{ filter_option }}{% endif %}" class="btn btn-outline-danger ms-2">
+            Next →
+        </a>
+        {% endif %}
+    </div>
+
+    <!-- Page Numbers -->
+    <div>
+        {% for i in recipes.paginator.page_range %}
+        {% if i == recipes.number %}
+        <span class="btn btn-outline-secondary disabled">{{ i }}</span>
+        {% else %}
+        <a href="?page={{ i }}
+                        {% if search_query %}&q={{ search_query }}{% endif %}
+                        {% if filter_option %}&filter={{ filter_option }}{% endif %}" class="btn btn-outline-danger">
+            {{ i }}
+        </a>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+
 <!-- Favorite Recipes Section -->
 <hr class="my-5">
 
@@ -127,7 +211,8 @@
                 {% if recipe.image %}
                 <img src="{{ recipe.image.url }}" class="card-img-top recipe-img" alt="{{ recipe.title }}">
                 {% else %}
-                <div class="recipe-placeholder bg-secondary text-white d-flex align-items-center justify-content-center">
+                <div
+                    class="recipe-placeholder bg-secondary text-white d-flex align-items-center justify-content-center">
                     No Image
                 </div>
                 {% endif %}
@@ -154,7 +239,8 @@
                             {% endif %}
 
                             <!-- Comments Counter -->
-                            <a href="{% url 'recipe_detail' recipe.pk %}#comments-section" class="btn btn-outline-secondary btn-sm">
+                            <a href="{% url 'recipe_detail' recipe.pk %}#comments-section"
+                                class="btn btn-outline-secondary btn-sm">
                                 💬 {{ recipe.comments.count }}
                             </a>
 
@@ -193,6 +279,99 @@
 
     </div>
 </div>
+
+<!-- Top rated Recipes Section -->
+<hr class="my-5">
+
+<div class="container">
+
+    <h2 class="fw-bold caveat text-center mb-4">Top 3 Rated Recipes</h2>
+
+    <div class="row g-4">
+
+        {% for recipe in top_rated %}
+        <div class="col-md-4 col-sm-6">
+            <div class="card shadow-sm recipe-card h-100" data-href="{% url 'recipe_detail' recipe.pk %}"
+                style="cursor:pointer; display:flex; flex-direction:column;">
+
+                {% if recipe.image %}
+                <img src="{{ recipe.image.url }}" class="card-img-top recipe-img" alt="{{ recipe.title }}">
+                {% else %}
+                <div
+                    class="recipe-placeholder bg-secondary text-white d-flex align-items-center justify-content-center">
+                    No Image
+                </div>
+                {% endif %}
+
+                <div class="card-body d-flex flex-column">
+
+                    <h5 class="card-title fw-bold">{{ recipe.title }}</h5>
+                    <p class="card-text text-muted">{{ recipe.description|truncatewords:20 }}</p>
+
+                    <div class="recipe-footer mt-auto d-flex justify-content-between align-items-center">
+
+                        <!-- Left: Likes + Comments + Rating -->
+                        <div class="d-flex align-items-center gap-2">
+
+                            <!-- Likes -->
+                            <span class="btn btn-outline-secondary btn-sm">
+                                ❤️ {{ recipe.likes.count }}
+                            </span>
+
+                            <!-- Comments -->
+                            <a href="{% url 'recipe_detail' recipe.pk %}#comments-section"
+                                class="btn btn-outline-secondary btn-sm">
+                                💬 {{ recipe.comments.count }}
+                            </a>
+
+                            <!-- Average Rating -->
+                            <div class="d-flex align-items-center gap-1">
+                                <i class="fa-solid fa-star text-warning"></i>
+
+                                <span>
+                                    {% if recipe.avg_rating %}
+                                    {{ recipe.avg_rating|floatformat:1 }}
+                                    {% else %}
+                                    0.0
+                                    {% endif %}
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <!-- Right: Save / Unsave -->
+                        <div>
+                            {% if user.is_authenticated %}
+                            <form action="{% url 'toggle_save' recipe.pk %}" method="post" class="d-inline">
+                                {% csrf_token %}
+
+                                {% if user in recipe.saved_by.all %}
+                                <input type="hidden" name="action" value="unsave">
+                                <button type="submit" class="btn btn-outline-secondary btn-sm">
+                                    ❌ Unsave
+                                </button>
+                                {% else %}
+                                <input type="hidden" name="action" value="save">
+                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                    💾 Save
+                                </button>
+                                {% endif %}
+                            </form>
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-muted text-center">No rated recipes yet.</p>
+        {% endfor %}
+
+    </div>
+</div>
+
 
 <script src="{% static 'recipes/recipe_list.js' %}"></script>
 

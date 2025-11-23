@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // -------------------------------
-    // NEW: Instant search filtering
+    // Instant search filtering
     // -------------------------------
     const searchInput = document.getElementById("search-input");
     const recipesContainer = document.getElementById("recipes-container");
@@ -32,18 +32,15 @@ document.addEventListener("DOMContentLoaded", function () {
         searchInput.addEventListener("input", function () {
             const query = searchInput.value;
 
-            // Fetch updated recipes from server via AJAX
             fetch(`${window.location.pathname}?q=${encodeURIComponent(query)}`, {
                 headers: { "X-Requested-With": "XMLHttpRequest" },
             })
                 .then(response => response.text())
                 .then(html => {
-                    // Parse the HTML response
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(html, "text/html");
                     const newRecipes = doc.getElementById("recipes-container");
 
-                    // Replace the recipes container content
                     if (newRecipes) {
                         recipesContainer.innerHTML = newRecipes.innerHTML;
 
@@ -81,12 +78,11 @@ document.addEventListener("DOMContentLoaded", function () {
             const targetUrl = link.href.split("#")[0];
             const targetHash = link.hash;
 
-            // If same page, scroll smoothly
             if (window.location.href.split("#")[0] === targetUrl) {
                 event.preventDefault();
                 const target = document.querySelector(targetHash);
                 if (target) {
-                    const offset = 100; // adjust as needed
+                    const offset = 100;
                     const bodyRect = document.body.getBoundingClientRect().top;
                     const elementRect = target.getBoundingClientRect().top;
                     const elementPosition = elementRect - bodyRect;
@@ -98,8 +94,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     });
                 }
             } else {
-                // For cross-page links (from recipe_list to recipe_detail)
-                // Store in localStorage that we need to scroll to comments
                 localStorage.setItem("scrollToComments", link.href);
             }
         });
@@ -108,18 +102,15 @@ document.addEventListener("DOMContentLoaded", function () {
     // -------------------------------
     // Check on page load if we need to scroll to comments
     // -------------------------------
-    window.addEventListener("load", function() { // wait for all images/content
+    window.addEventListener("load", function () {
         if (localStorage.getItem("scrollToComments")) {
             const scrollUrl = localStorage.getItem("scrollToComments");
             const [url, hash] = scrollUrl.split("#");
 
-            // Only scroll if we are on the target page
             if (window.location.href.split("#")[0] === url) {
                 const target = document.getElementById(hash);
                 if (target) {
                     const offset = 100;
-                    
-                    // Optional small delay to ensure layout is fully loaded
                     setTimeout(() => {
                         const bodyRect = document.body.getBoundingClientRect().top;
                         const elementRect = target.getBoundingClientRect().top;
@@ -131,12 +122,60 @@ document.addEventListener("DOMContentLoaded", function () {
                             behavior: "smooth"
                         });
 
-                        // Clear the flag after scrolling
                         localStorage.removeItem("scrollToComments");
-                    }, 100); // 100ms delay
+                    }, 100);
                 }
             }
         }
+    });
+
+    // -------------------------------
+    // COMMENT EDIT FUNCTIONALITY
+    // -------------------------------
+    document.addEventListener('click', function (event) {
+
+        // Edit button click
+        if (event.target.classList.contains('edit-comment-btn')) {
+            const id = event.target.dataset.id;
+            const commentDiv = document.getElementById(`comment-${id}`);
+            const editForm = document.getElementById(`edit-form-${id}`);
+            const editBtn = event.target;
+            const deleteBtn = commentDiv.querySelector('.original-delete-btn'); // Original delete button
+
+            if (commentDiv && editForm) {
+                // Hide comment content and original buttons
+                commentDiv.querySelector('.comment-content').style.display = 'none';
+                editBtn.style.display = 'none';
+                if (deleteBtn) deleteBtn.style.display = 'none';
+
+                // Show edit form and delete button inside form
+                editForm.classList.remove('d-none');
+                const editFormDelete = editForm.querySelector('.delete-button-form');
+                if (editFormDelete) editFormDelete.classList.remove('d-none');
+            }
+        }
+
+        // Cancel button click
+        if (event.target.classList.contains('cancel-edit-btn')) {
+            const id = event.target.dataset.id;
+            const commentDiv = document.getElementById(`comment-${id}`);
+            const editForm = document.getElementById(`edit-form-${id}`);
+            const editBtn = commentDiv.querySelector(`.edit-comment-btn`);
+            const deleteBtn = commentDiv.querySelector('.original-delete-btn');
+
+            if (commentDiv && editForm) {
+                // Hide edit form, show original content & buttons
+                editForm.classList.add('d-none');
+                commentDiv.querySelector('.comment-content').style.display = 'block';
+                if (editBtn) editBtn.style.display = 'inline-block';
+                if (deleteBtn) deleteBtn.style.display = 'inline-block';
+
+                // Hide delete inside edit form again
+                const editFormDelete = editForm.querySelector('.delete-button-form');
+                if (editFormDelete) editFormDelete.classList.add('d-none');
+            }
+        }
+
     });
 
 });

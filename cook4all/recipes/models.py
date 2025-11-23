@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from cloudinary.models import CloudinaryField
+from django.db.models import Avg
 
 
 class Recipe(models.Model):
@@ -12,7 +13,7 @@ class Recipe(models.Model):
     image = CloudinaryField('image', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    # NEW: Likes field
+    # Likes field
     likes = models.ManyToManyField(User, related_name="liked_recipes", blank=True)
 
     # Saved recipes field
@@ -21,6 +22,17 @@ class Recipe(models.Model):
     def total_likes(self):
         """Return the total number of likes for this recipe."""
         return self.likes.count()
+
+    @property
+    def average_rating(self):
+        """Return the average rating (1-5) for this recipe."""
+        agg = self.ratings.aggregate(avg=Avg('value'))
+        return agg['avg'] or 0
+
+    def user_rating_for(self, user):
+        """Return the rating value a given user gave this recipe, or 0."""
+        rating = self.ratings.filter(user=user).first()
+        return rating.value if rating else 0
 
     def __str__(self):
         return self.title
@@ -36,6 +48,7 @@ class Comment(models.Model):
     def __str__(self):
         return f"Comment by {self.author.username} on {self.recipe.title}"
 
+
 class Rating(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name="ratings")
@@ -43,14 +56,4 @@ class Rating(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'recipe')  # Each user can rate once
-
-
-@property
-def average_rating(self):
-    agg = self.ratings.aggregate(avg=models.Avg('value'))
-    return agg['avg'] or 0
-
-def user_rating_for(self, user):
-    rating = self.ratings.filter(user=user).first()
-    return rating.value if rating else 0
+        unique_together = ('user', 'recipe')

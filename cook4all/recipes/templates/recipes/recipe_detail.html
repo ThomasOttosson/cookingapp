@@ -19,30 +19,20 @@
                     <h1 class="fw-bold mb-3 text-center">{{ recipe.title }}</h1>
 
                     <p class="text-muted text-center">
-                        Posted by
-                        <strong>{{ recipe.author.username }}</strong>
-                        on {{ recipe.created_at|date:"M d, Y" }}
+                        Posted by <strong>{{ recipe.author.username }}</strong> on {{ recipe.created_at|date:"M d, Y" }}
                     </p>
 
-                    <!-- Save + Unsave Buttons -->
                     {% if user.is_authenticated %}
                     <div class="d-flex justify-content-center gap-2 mb-4 mt-3">
                         <form action="{% url 'toggle_save' recipe.pk %}" method="post">
                             {% csrf_token %}
                             <input type="hidden" name="action" value="save">
-                            <button type="submit"
-                                class="btn {% if user in recipe.saved_by.all %}btn-outline-secondary{% else %}btn-outline-dark{% endif %} btn-sm">
-                                💾 Save
-                            </button>
+                            <button type="submit" class="btn {% if user in recipe.saved_by.all %}btn-outline-secondary{% else %}btn-outline-dark{% endif %} btn-sm">💾 Save</button>
                         </form>
-
                         <form action="{% url 'toggle_save' recipe.pk %}" method="post">
                             {% csrf_token %}
                             <input type="hidden" name="action" value="unsave">
-                            <button type="submit"
-                                class="btn {% if user in recipe.saved_by.all %}btn-outline-danger{% else %}btn-outline-secondary disabled{% endif %} btn-sm">
-                                ❌ Unsave
-                            </button>
+                            <button type="submit" class="btn {% if user in recipe.saved_by.all %}btn-outline-danger{% else %}btn-outline-secondary disabled{% endif %} btn-sm">❌ Unsave</button>
                         </form>
                     </div>
                     {% endif %}
@@ -53,28 +43,20 @@
                     <p>{{ recipe.description }}</p>
 
                     <h4 class="mt-4 fw-semibold">Ingredients</h4>
-                    <div class="bg-light p-3 rounded">
-                        {{ recipe.ingredients|linebreaks }}
-                    </div>
+                    <div class="bg-light p-3 rounded">{{ recipe.ingredients|linebreaks }}</div>
 
                     <h4 class="mt-4 fw-semibold">Instructions</h4>
-                    <div class="bg-light p-3 rounded">
-                        {{ recipe.instructions|linebreaks }}
-                    </div>
+                    <div class="bg-light p-3 rounded">{{ recipe.instructions|linebreaks }}</div>
 
                     <!-- Like Button -->
                     <div class="mt-4 text-center">
                         {% if user.is_authenticated %}
                         <form action="{% url 'recipe_like' recipe.pk %}" method="post" class="d-inline">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-outline-danger btn-sm">
-                                ❤️ {{ recipe.total_likes }}
-                            </button>
+                            <button type="submit" class="btn btn-outline-danger btn-sm">❤️ {{ recipe.total_likes }}</button>
                         </form>
                         {% else %}
-                        <span class="btn btn-outline-secondary btn-sm">
-                            ❤️ {{ recipe.total_likes }}
-                        </span>
+                        <span class="btn btn-outline-secondary btn-sm">❤️ {{ recipe.total_likes }}</span>
                         {% endif %}
                     </div>
 
@@ -87,11 +69,7 @@
                             <div class="star-rating">
                                 {% for i in "12345" %}
                                 <button type="submit" name="rating" value="{{ i }}" class="btn btn-link p-0 m-0 text-warning">
-                                    {% if user_rating >= i|add:"0" %}
-                                    ★
-                                    {% else %}
-                                    ☆
-                                    {% endif %}
+                                    {% if user_rating >= i|add:"0" %}★{% else %}☆{% endif %}
                                 </button>
                                 {% endfor %}
                             </div>
@@ -113,12 +91,10 @@
                     <h3 class="fw-semibold mb-3" id="comments-section">Comments ({{ recipe.comments.count }})</h3>
 
                     {% if user.is_authenticated %}
-                    <!-- Add Comment Form -->
                     <form action="{% url 'add_comment' recipe.pk %}" method="post" class="mb-4">
                         {% csrf_token %}
                         <div class="mb-2">
-                            <textarea name="content" class="form-control" rows="3"
-                                placeholder="Write a comment..."></textarea>
+                            <textarea name="content" class="form-control" rows="3" placeholder="Write a comment..."></textarea>
                         </div>
                         <button type="submit" class="btn btn-secondary btn-sm">Post Comment</button>
                     </form>
@@ -129,18 +105,42 @@
                     <!-- Existing Comments -->
                     <div class="list-group">
                         {% for comment in recipe.comments.all|dictsortreversed:"created_at" %}
-                        <div class="list-group-item d-flex justify-content-between align-items-start">
-                            <div>
+                        <div class="list-group-item d-flex justify-content-between align-items-start" id="comment-{{ comment.id }}">
+                            <div class="comment-content">
                                 <strong>{{ comment.author.username }}</strong>
                                 <small class="text-muted"> • {{ comment.created_at|naturaltime }}</small>
                                 <p class="mb-0">{{ comment.content }}</p>
                             </div>
+
                             {% if user == comment.author %}
-                            <div>
-                                <!-- Delete button -->
-                                <form action="{% url 'delete_comment' recipe.pk comment.id %}" method="post">
+                            <div class="comment-actions d-flex flex-column gap-2">
+                                <!-- Edit Button -->
+                                <button type="button" class="btn btn-outline-secondary btn-sm edit-comment-btn" data-id="{{ comment.id }}">Edit</button>
+
+                                <!-- Original Delete Button -->
+                                <form action="{% url 'delete_comment' recipe.pk comment.id %}" method="post" class="original-delete-btn m-0 p-0">
                                     {% csrf_token %}
-                                    <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                                    <button type="submit" class="btn btn-outline-danger btn-sm w-100">Delete</button>
+                                </form>
+
+                                <!-- Hidden Edit Form -->
+                                <form method="post" action="{% url 'edit_comment' recipe.pk comment.id %}" class="edit-comment-form d-none mt-2" id="edit-form-{{ comment.id }}">
+                                    {% csrf_token %}
+                                    <div class="d-flex flex-column gap-2">
+                                        <input type="text" name="content" class="form-control" value="{{ comment.content }}">
+
+                                        <!-- Buttons row: Update, Cancel, Delete -->
+                                        <div class="d-flex gap-2 justify-content-end align-items-center">
+                                            <button type="submit" class="btn btn-outline-success btn-sm">Update</button>
+                                            <button type="button" class="btn btn-outline-secondary btn-sm cancel-edit-btn" data-id="{{ comment.id }}">Cancel</button>
+                                            
+                                            <!-- Delete button as separate form outside edit form -->
+                                            <form action="{% url 'delete_comment' recipe.pk comment.id %}" method="post" class="m-0 p-0">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </form>
                             </div>
                             {% endif %}
@@ -155,5 +155,8 @@
         </div>
     </div>
 </div>
+
+<!-- Include JavaScript -->
+<script src="{% static 'recipes/recipe_detail.js' %}"></script>
 
 {% endblock %}

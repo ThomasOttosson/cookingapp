@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block content %}
 
@@ -8,53 +9,62 @@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <div class="card shadow-lg border-0 rounded-4 p-4">
+
+            <div class="card shadow-lg border-0 rounded-4 p-4 bg-white">
 
                 <!-- Header -->
                 <div class="text-center mb-4">
-                    <h1 class="fw-bold caveat">Edit Profile</h1>
-                    <p class="text-muted">Update your account information</p>
+                    <h1 class="fw-bold display-5 caveat">Edit Profile</h1>
+                    <p class="text-muted fs-6">Update your account information</p>
                 </div>
 
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
 
-                    <div class="row">
-                        <!-- Profile Image -->
-                        <div class="col-md-4 text-center mb-3">
-                            <img src="{% if user.profile.profile_image %}{{ user.profile.profile_image.url }}{% else %}{% static 'users/default_profile.png' %}{% endif %}"
-                                 class="rounded-circle img-fluid profile-pic mb-2">
+                    <div class="row g-4">
 
-                            <div class="mt-2">
-                                {{ profile_form.profile_image }}
+                        <!-- Profile Image -->
+                        <div class="col-md-4 text-center">
+                            <div class="position-relative d-inline-block">
+                                <img src="{% if user.profile.profile_image %}{{ user.profile.profile_image.url }}{% else %}{% static 'users/default_profile.png' %}{% endif %}"
+                                     class="rounded-circle img-fluid border border-3 border-light profile-pic shadow-sm"
+                                     style="width: 150px; height: 150px; object-fit: cover;">
+                                <div class="mt-3">
+                                    {{ profile_form.profile_image }}
+                                </div>
                             </div>
                         </div>
 
                         <!-- User Fields -->
                         <div class="col-md-8">
+
                             <div class="mb-3">
                                 <label class="form-label fw-semibold">First Name</label>
-                                {{ user_form.first_name }}
+                                {{ user_form.first_name|add_class:"form-control form-control-lg" }}
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label fw-semibold">Last Name</label>
-                                {{ user_form.last_name }}
+                                {{ user_form.last_name|add_class:"form-control form-control-lg" }}
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label fw-semibold">Email</label>
-                                {{ user_form.email }}
+                                {{ user_form.email|add_class:"form-control form-control-lg" }}
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label fw-semibold">Bio</label>
-                                {{ profile_form.bio }}
+                                {{ profile_form.bio|add_class:"form-control form-control-lg" }}
                             </div>
 
-                            <button type="submit" class="btn btn-danger">Save Changes</button>
-                            <a href="{% url 'account_info' %}" class="btn btn-outline-secondary ms-2">Cancel</a>
+                            <div class="d-flex align-items-center mt-4">
+                                <button type="submit" class="btn btn-danger btn-lg shadow-sm">Save Changes</button>
+                                <a href="{% url 'account_info' %}" class="btn btn-outline-secondary btn-lg ms-3">Cancel</a>
+                            </div>
+
                         </div>
+
                     </div>
 
                 </form>
