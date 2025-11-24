@@ -7,4 +7,5 @@ urlpatterns = [
     path('account/', views.AccountInfoView.as_view(), name='account_info'),
     path('toggle-save/<int:pk>/', views.toggle_save, name='toggle_save'),
     path("edit/", edit_profile, name="edit_profile"),
+    path("recipes/", views.user_recipes, name="user_recipes"),
 ]

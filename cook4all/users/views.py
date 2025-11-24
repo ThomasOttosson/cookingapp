@@ -52,3 +52,9 @@ def edit_profile(request):
         "user_form": user_form,
         "profile_form": profile_form,
     })
+
+
+@login_required
+def user_recipes(request):
+    recipes = request.user.recipes.all()  # uses related_name="recipes"
+    return render(request, "users/user_recipes.html", {"recipes": recipes})

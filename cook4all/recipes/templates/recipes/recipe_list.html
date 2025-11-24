@@ -43,13 +43,30 @@
                 Top Rated Recipes
             </a>
 
-            <button class="btn btn-outline-danger m-1">Breakfast</button>
+            <a href="{% if filter_option == 'breakfast' %}?{% if search_query %}q={{ search_query }}{% endif %}{% else %}?filter=breakfast{% if search_query %}&q={{ search_query }}{% endif %}{% endif %}"
+                class="btn m-1 {% if filter_option == 'breakfast' %}btn-danger{% else %}btn-outline-danger{% endif %}">
+                Breakfasts
+            </a>
 
-            <button class="btn btn-outline-danger m-1">Lunch</button>
+            <a href="{% if filter_option == 'dinner' %}?{% if search_query %}q={{ search_query }}{% endif %}{% else %}?filter=dinner{% if search_query %}&q={{ search_query }}{% endif %}{% endif %}"
+                class="btn m-1 {% if filter_option == 'dinner' %}btn-danger{% else %}btn-outline-danger{% endif %}">
+                Dinners
+            </a>
 
-            <button class="btn btn-outline-danger m-1">Dinner</button>
+            <a href="{% if filter_option == 'snack' %}?{% if search_query %}q={{ search_query }}{% endif %}{% else %}?filter=snack{% if search_query %}&q={{ search_query }}{% endif %}{% endif %}"
+                class="btn m-1 {% if filter_option == 'snack' %}btn-danger{% else %}btn-outline-danger{% endif %}">
+                Snacks
+            </a>
 
-            <button class="btn btn-outline-danger m-1">Desserts</button>
+            <a href="{% if filter_option == 'dessert' %}?{% if search_query %}q={{ search_query }}{% endif %}{% else %}?filter=dessert{% if search_query %}&q={{ search_query }}{% endif %}{% endif %}"
+                class="btn m-1 {% if filter_option == 'dessert' %}btn-danger{% else %}btn-outline-danger{% endif %}">
+                Desserts
+            </a>
+
+            <a href="{% if filter_option == 'other' %}?{% if search_query %}q={{ search_query }}{% endif %}{% else %}?filter=other{% if search_query %}&q={{ search_query }}{% endif %}{% endif %}"
+                class="btn m-1 {% if filter_option == 'other' %}btn-danger{% else %}btn-outline-danger{% endif %}">
+                Others
+            </a>
 
         </div>
 

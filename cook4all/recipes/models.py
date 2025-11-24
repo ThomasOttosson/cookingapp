@@ -5,6 +5,14 @@ from django.db.models import Avg
 
 
 class Recipe(models.Model):
+    CATEGORY_CHOICES = [
+        ('breakfast', 'Breakfast'),
+        ('dinner', 'Dinner'),
+        ('snack', 'Snack'),
+        ('dessert', 'Dessert'),
+        ('other', 'Other'),
+    ]
+
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="recipes")
     title = models.CharField(max_length=200)
     description = models.TextField()
@@ -18,6 +26,9 @@ class Recipe(models.Model):
 
     # Saved recipes field
     saved_by = models.ManyToManyField(User, related_name="saved_recipes", blank=True)
+
+    # ⭐ Category field
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='other')
 
     def total_likes(self):
         """Return the total number of likes for this recipe."""

@@ -65,6 +65,7 @@
                                 My Account
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
+                                <li><a class="dropdown-item" href="{% url 'user_recipes' %}">My Recipes</a></li>
                                 <li><a class="dropdown-item" href="{% url 'saved_recipes' %}">Saved Recipes</a></li>
                                 <li><a class="dropdown-item" href="{% url 'account_info' %}">Account Info</a></li>
                                 <!-- Optional: add more links here, like Bio, Settings, etc. -->
